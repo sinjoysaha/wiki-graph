@@ -4,7 +4,6 @@ import networkx as nx
 
 WIKI_HOME_URL = 'https://en.wikipedia.org'
 
-
 def get_soup(url):
     r = requests.get(url)
     soup = BeautifulSoup(r.text, 'html.parser')
