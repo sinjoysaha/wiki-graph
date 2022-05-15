@@ -1,4 +1,4 @@
-# Wikipedia Graph Visualization using Networkx
+# Wikipedia Graph Visualization using NetworkX
 
 [![GitHub contributors](https://img.shields.io/github/contributors/sinjoysaha/wiki-graph.svg)](https://GitHub.com/sinjoysaha/wiki-graph/graphs/contributors/)
 [![GitHub forks](https://img.shields.io/github/forks/sinjoysaha/[project_name].svg)](https://GitHub.com/sinjoysaha/wiki-graph/network/)
@@ -14,6 +14,7 @@
 
 * [About the Project](#about-the-project)
   * [Tasks](#tasks)
+  * [To Do](#to-do)
   * [Built With](#built-with)
 * [Fork the Repo and Contribute](#Fork-the-Repo-and-Contribute)
 * [Contact](#contact)
@@ -23,6 +24,19 @@
 In this project, we explore [NetworkX](https://networkx.org/), a Python library for graph algorithms and visualizations. We scrape Wikipedia pages for any arbitrary search word and get the first web link referred by the wiki page. Then, we visit that page and again get the first link. We recursively keep visiting the web links and store them in a graph. If the link is already visited, we stop. The data is stored using Pickle library in Python.
 
 [![Project Image](docs/images/wiki-graph-projectimage.png)](https://github.com/sinjoysaha/wiki-graph)
+
+### Tasks
+
+1. Webscaping using requests and Beautiful Soup.
+2. Cleaning links to get words to be used as graph nodes.
+2. Build graph with nodes obtained using NetworkX.
+
+### To Do
+
+1. Recursively visit and store all links from first non-empty \<p> tag in each wiki page.
+   Try - 
+   * Breadth First Search (BFS)
+   * Depth First Search (DFS)
 
 ### Built With
 
