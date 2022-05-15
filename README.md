@@ -1,4 +1,4 @@
-# Disney Movies Wikipedia WebScraper
+# Wikipedia Graph Visualization using Networkx
 
 [![GitHub contributors](https://img.shields.io/github/contributors/sinjoysaha/wiki-graph.svg)](https://GitHub.com/sinjoysaha/wiki-graph/graphs/contributors/)
 [![GitHub forks](https://img.shields.io/github/forks/sinjoysaha/[project_name].svg)](https://GitHub.com/sinjoysaha/wiki-graph/network/)
