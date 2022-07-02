@@ -10,7 +10,10 @@ def get_soup(url):
     return soup
 
 def get_href_list(soup):
-    p_list = soup.find('div', attrs={'class': 'mw-parser-output'}).find_all('p', recursive=False)
+    p_list = soup.find('div', attrs={'id': 'mw-content-text'}
+                      ).find('div', attrs={'class': 'mw-parser-output'}
+                      ).find_all('p', recursive=False)
+    
 #     print(p_list)
     href_list = []
     for p in p_list:

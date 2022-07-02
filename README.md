@@ -21,15 +21,16 @@
 
 ## About the Project
 
-In this project, we explore [NetworkX](https://networkx.org/), a Python library for graph algorithms and visualizations. We scrape Wikipedia pages for any arbitrary search word and get the first web link referred by the wiki page. Then, we visit that page and again get the first link. We recursively keep visiting the web links and store them in a graph. If the link is already visited, we stop. The data is stored using Pickle library in Python.
+In this project, we explore [NetworkX](https://networkx.org/), a Python library for graph algorithms and visualizations. We scrape Wikipedia pages for any arbitrary search word and get the first web link referred by the wiki page. Then, we visit that page and again get the first link. We recursively keep visiting the web links and store them in a graph. If the link is already visited, we stop. The links/search words are stored as nodes in a directed graph. The graph is stored using Pickle library in Python. The final visualization of the graph in a HTML page is done using `PyVis`. PyVis takes in the NetworkX graph and renders a HTML page using `vis.js`.
 
-[![Project Image](docs/images/wiki-graph-projectimage.png)](https://github.com/sinjoysaha/wiki-graph)
+[![Project Image](docs/images/wiki-graph-projectimage.gif)](https://github.com/sinjoysaha/wiki-graph)
 
 ### Tasks
 
 1. Webscaping using requests and Beautiful Soup.
 2. Cleaning links to get words to be used as graph nodes.
-2. Build graph with nodes obtained using NetworkX.
+3. Build graph with nodes obtained using NetworkX.
+4. Visualization of graph using PyVis.
 
 ### To Do
 
@@ -41,6 +42,7 @@ In this project, we explore [NetworkX](https://networkx.org/), a Python library 
 ### Built With
 
 * NetworkX
+* PyVis
 * Beautiful Soup
 * Requests
 * Pickle

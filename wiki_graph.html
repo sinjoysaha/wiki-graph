@@ -1,0 +1,216 @@
+<html>
+<head>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vis-network@latest/styles/vis-network.css" type="text/css" />
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vis-network@latest/dist/vis-network.min.js"> </script>
+<center>
+<h1>Wiki Graph</h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+
+<style type="text/css">
+
+        #mynetwork {
+            width: 1400px;
+            height: 800px;
+            background-color: #ffffff;
+            border: 1px solid lightgray;
+            position: relative;
+            float: left;
+        }
+
+        
+        #loadingBar {
+            position:absolute;
+            top:0px;
+            left:0px;
+            width: 1400px;
+            height: 800px;
+            background-color:rgba(200,200,200,0.8);
+            -webkit-transition: all 0.5s ease;
+            -moz-transition: all 0.5s ease;
+            -ms-transition: all 0.5s ease;
+            -o-transition: all 0.5s ease;
+            transition: all 0.5s ease;
+            opacity:1;
+        }
+
+        #bar {
+            position:absolute;
+            top:0px;
+            left:0px;
+            width:20px;
+            height:20px;
+            margin:auto auto auto auto;
+            border-radius:11px;
+            border:2px solid rgba(30,30,30,0.05);
+            background: rgb(0, 173, 246); /* Old browsers */
+            box-shadow: 2px 0px 4px rgba(0,0,0,0.4);
+        }
+
+        #border {
+            position:absolute;
+            top:10px;
+            left:10px;
+            width:500px;
+            height:23px;
+            margin:auto auto auto auto;
+            box-shadow: 0px 0px 4px rgba(0,0,0,0.2);
+            border-radius:10px;
+        }
+
+        #text {
+            position:absolute;
+            top:8px;
+            left:530px;
+            width:30px;
+            height:50px;
+            margin:auto auto auto auto;
+            font-size:22px;
+            color: #000000;
+        }
+
+        div.outerBorder {
+            position:relative;
+            top:400px;
+            width:600px;
+            height:44px;
+            margin:auto auto auto auto;
+            border:8px solid rgba(0,0,0,0.1);
+            background: rgb(252,252,252); /* Old browsers */
+            background: -moz-linear-gradient(top,  rgba(252,252,252,1) 0%, rgba(237,237,237,1) 100%); /* FF3.6+ */
+            background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(252,252,252,1)), color-stop(100%,rgba(237,237,237,1))); /* Chrome,Safari4+ */
+            background: -webkit-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Chrome10+,Safari5.1+ */
+            background: -o-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Opera 11.10+ */
+            background: -ms-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* IE10+ */
+            background: linear-gradient(to bottom,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* W3C */
+            filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcfcfc', endColorstr='#ededed',GradientType=0 ); /* IE6-9 */
+            border-radius:72px;
+            box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
+        }
+        
+
+        
+        #config {
+            float: left;
+            width: 400px;
+            height: 600px;
+        }
+        
+
+        
+</style>
+
+</head>
+
+<body>
+<div id = "mynetwork"></div>
+
+<div id="loadingBar">
+    <div class="outerBorder">
+        <div id="text">0%</div>
+        <div id="border">
+            <div id="bar"></div>
+        </div>
+    </div>
+</div>
+
+
+<div id = "config"></div>
+
+<script type="text/javascript">
+
+    // initialize global variables.
+    var edges;
+    var nodes;
+    var network; 
+    var container;
+    var options, data;
+
+    
+    // This method is responsible for drawing the graph, returns the drawn network
+    function drawGraph() {
+        var container = document.getElementById('mynetwork');
+        
+        
+
+        // parsing and collecting nodes and edges from the python
+        nodes = new vis.DataSet([{"id": "Kolkata", "label": "Kolkata", "shape": "dot", "size": 0}, {"id": "List_of_renamed_Indian_cities_and_states", "label": "List_of_renamed_Indian_cities_and_states", "shape": "dot", "size": 10}, {"id": "Capital_city", "label": "Capital_city", "shape": "dot", "size": 10}, {"id": "India", "label": "India", "shape": "dot", "size": 20}, {"id": "States_and_union_territories_of_India", "label": "States_and_union_territories_of_India", "shape": "dot", "size": 10}, {"id": "West_Bengal", "label": "West_Bengal", "shape": "dot", "size": 10}, {"id": "Hooghly_River", "label": "Hooghly_River", "shape": "dot", "size": 10}, {"id": "Bangladesh", "label": "Bangladesh", "shape": "dot", "size": 10}, {"id": "East_India", "label": "East_India", "shape": "dot", "size": 20}, {"id": "North-East_India", "label": "North-East_India", "shape": "dot", "size": 10}, {"id": "List_of_most_populous_cities_in_India", "label": "List_of_most_populous_cities_in_India", "shape": "dot", "size": 10}, {"id": "Lakh", "label": "Lakh", "shape": "dot", "size": 10}, {"id": "Crore", "label": "Crore", "shape": "dot", "size": 10}, {"id": "Kolkata_metropolitan_area", "label": "Kolkata_metropolitan_area", "shape": "dot", "size": 10}, {"id": "List_of_metropolitan_areas_in_India", "label": "List_of_metropolitan_areas_in_India", "shape": "dot", "size": 10}, {"id": "Port_of_Kolkata", "label": "Port_of_Kolkata", "shape": "dot", "size": 10}, {"id": "British_Raj", "label": "British_Raj", "shape": "dot", "size": 10}, {"id": "United_Kingdom", "label": "United_Kingdom", "shape": "dot", "size": 10}, {"id": "Endonym_and_exonym", "label": "Endonym_and_exonym", "shape": "dot", "size": 10}, {"id": "Hindi_language", "label": "Hindi_language", "shape": "dot", "size": 10}, {"id": "The_Crown", "label": "The_Crown", "shape": "dot", "size": 10}, {"id": "Indian_subcontinent", "label": "Indian_subcontinent", "shape": "dot", "size": 20}, {"id": "United_Kingdom_of_Great_Britain_and_Ireland", "label": "United_Kingdom_of_Great_Britain_and_Ireland", "shape": "dot", "size": 10}, {"id": "Presidencies_and_provinces_of_British_India", "label": "Presidencies_and_provinces_of_British_India", "shape": "dot", "size": 10}, {"id": "British_paramountcy", "label": "British_paramountcy", "shape": "dot", "size": 10}, {"id": "Princely_state", "label": "Princely_state", "shape": "dot", "size": 10}, {"id": "Devanagari", "label": "Devanagari", "shape": "dot", "size": 10}, {"id": "ISO_15919", "label": "ISO_15919", "shape": "dot", "size": 10}, {"id": "Indo-Aryan_language", "label": "Indo-Aryan_language", "shape": "dot", "size": 10}, {"id": "Hindi_Belt", "label": "Hindi_Belt", "shape": "dot", "size": 10}, {"id": "North_India", "label": "North_India", "shape": "dot", "size": 10}, {"id": "Central_India", "label": "Central_India", "shape": "dot", "size": 10}, {"id": "Western_India", "label": "Western_India", "shape": "dot", "size": 10}, {"id": "Standard_language", "label": "Standard_language", "shape": "dot", "size": 10}, {"id": "Sanskrit", "label": "Sanskrit", "shape": "dot", "size": 20}, {"id": "Register_(sociolinguistics)", "label": "Register_(sociolinguistics)", "shape": "dot", "size": 10}, {"id": "Hindustani_language", "label": "Hindustani_language", "shape": "dot", "size": 10}, {"id": "Old_Hindi", "label": "Old_Hindi", "shape": "dot", "size": 10}, {"id": "Delhi", "label": "Delhi", "shape": "dot", "size": 10}, {"id": "Northern_India", "label": "Northern_India", "shape": "dot", "size": 10}, {"id": "Official_language", "label": "Official_language", "shape": "dot", "size": 10}, {"id": "Government_of_India", "label": "Government_of_India", "shape": "dot", "size": 10}, {"id": "Indian_English", "label": "Indian_English", "shape": "dot", "size": 10}, {"id": "Languages_with_official_status_in_India", "label": "Languages_with_official_status_in_India", "shape": "dot", "size": 10}, {"id": "States_of_India", "label": "States_of_India", "shape": "dot", "size": 10}, {"id": "Union_Territories", "label": "Union_Territories", "shape": "dot", "size": 10}, {"id": "Scheduled_languages_of_India", "label": "Scheduled_languages_of_India", "shape": "dot", "size": 10}, {"id": "IAST", "label": "IAST", "shape": "dot", "size": 10}, {"id": "Sanskrit_language", "label": "Sanskrit_language", "shape": "dot", "size": 10}, {"id": "Abugida", "label": "Abugida", "shape": "dot", "size": 10}, {"id": "Brahmi_script", "label": "Brahmi_script", "shape": "dot", "size": 10}, {"id": "List_of_writing_systems_by_adoption", "label": "List_of_writing_systems_by_adoption", "shape": "dot", "size": 10}, {"id": "Romanisation", "label": "Romanisation", "shape": "dot", "size": 10}, {"id": "Brahmic_family", "label": "Brahmic_family", "shape": "dot", "size": 10}, {"id": "Sir_Charles_Trevelyan,_1st_Baronet", "label": "Sir_Charles_Trevelyan,_1st_Baronet", "shape": "dot", "size": 10}, {"id": "William_Jones_(philologist)", "label": "William_Jones_(philologist)", "shape": "dot", "size": 10}, {"id": "Monier_Monier-Williams", "label": "Monier_Monier-Williams", "shape": "dot", "size": 10}, {"id": "International_Congress_of_Orientalists", "label": "International_Congress_of_Orientalists", "shape": "dot", "size": 10}, {"id": "Linguistics", "label": "Linguistics", "shape": "dot", "size": 20}, {"id": "Writing_system", "label": "Writing_system", "shape": "dot", "size": 10}, {"id": "Latin_script", "label": "Latin_script", "shape": "dot", "size": 10}, {"id": "Transliteration", "label": "Transliteration", "shape": "dot", "size": 10}, {"id": "Transcription_(linguistics)", "label": "Transcription_(linguistics)", "shape": "dot", "size": 10}, {"id": "Phoneme", "label": "Phoneme", "shape": "dot", "size": 10}, {"id": "Semantic", "label": "Semantic", "shape": "dot", "size": 10}, {"id": "Science", "label": "Science", "shape": "dot", "size": 40}, {"id": "Scientific_study", "label": "Scientific_study", "shape": "dot", "size": 10}, {"id": "Human", "label": "Human", "shape": "dot", "size": 20}, {"id": "Language", "label": "Language", "shape": "dot", "size": 20}, {"id": "Cognition", "label": "Cognition", "shape": "dot", "size": 20}, {"id": "Scientific_field", "label": "Scientific_field", "shape": "dot", "size": 10}, {"id": "Academic_discipline", "label": "Academic_discipline", "shape": "dot", "size": 10}, {"id": "Social_science", "label": "Social_science", "shape": "dot", "size": 10}, {"id": "Natural_science", "label": "Natural_science", "shape": "dot", "size": 10}, {"id": "Cognitive_science", "label": "Cognitive_science", "shape": "dot", "size": 10}, {"id": "Humanities", "label": "Humanities", "shape": "dot", "size": 10}, {"id": "Scientific_method", "label": "Scientific_method", "shape": "dot", "size": 10}, {"id": "Knowledge", "label": "Knowledge", "shape": "dot", "size": 20}, {"id": "Testability", "label": "Testability", "shape": "dot", "size": 10}, {"id": "Explanation", "label": "Explanation", "shape": "dot", "size": 10}, {"id": "Prediction", "label": "Prediction", "shape": "dot", "size": 10}, {"id": "Universe", "label": "Universe", "shape": "dot", "size": 10}, {"id": "Empirical_evidence", "label": "Empirical_evidence", "shape": "dot", "size": 10}, {"id": "Observation", "label": "Observation", "shape": "dot", "size": 10}, {"id": "Skepticism", "label": "Skepticism", "shape": "dot", "size": 10}, {"id": "Philosophy_of_science", "label": "Philosophy_of_science", "shape": "dot", "size": 10}, {"id": "Perception", "label": "Perception", "shape": "dot", "size": 20}, {"id": "Hypothesis", "label": "Hypothesis", "shape": "dot", "size": 10}, {"id": "Inductive_reasoning", "label": "Inductive_reasoning", "shape": "dot", "size": 10}, {"id": "Experiment", "label": "Experiment", "shape": "dot", "size": 20}, {"id": "Deductive_reasoning", "label": "Deductive_reasoning", "shape": "dot", "size": 20}, {"id": "Proposition", "label": "Proposition", "shape": "dot", "size": 20}, {"id": "Evidence", "label": "Evidence", "shape": "dot", "size": 10}, {"id": "Sense", "label": "Sense", "shape": "dot", "size": 10}, {"id": "Epistemology", "label": "Epistemology", "shape": "dot", "size": 10}, {"id": "Law", "label": "Law", "shape": "dot", "size": 10}, {"id": "Logic", "label": "Logic", "shape": "dot", "size": 20}, {"id": "Sentence_(linguistics)", "label": "Sentence_(linguistics)", "shape": "dot", "size": 10}, {"id": "Philosophy", "label": "Philosophy", "shape": "dot", "size": 20}, {"id": "Meaning_(philosophy)", "label": "Meaning_(philosophy)", "shape": "dot", "size": 10}, {"id": "Truth-bearer", "label": "Truth-bearer", "shape": "dot", "size": 10}, {"id": "Truth", "label": "Truth", "shape": "dot", "size": 20}, {"id": "False_(logic)", "label": "False_(logic)", "shape": "dot", "size": 10}, {"id": "Reason", "label": "Reason", "shape": "dot", "size": 10}, {"id": "Argument", "label": "Argument", "shape": "dot", "size": 10}, {"id": "Validity_(logic)", "label": "Validity_(logic)", "shape": "dot", "size": 10}, {"id": "Inference", "label": "Inference", "shape": "dot", "size": 10}, {"id": "Logical_truth", "label": "Logical_truth", "shape": "dot", "size": 10}, {"id": "Formal_science", "label": "Formal_science", "shape": "dot", "size": 10}, {"id": "Premise", "label": "Premise", "shape": "dot", "size": 10}, {"id": "Logical_constant", "label": "Logical_constant", "shape": "dot", "size": 10}, {"id": "Formal_system", "label": "Formal_system", "shape": "dot", "size": 10}, {"id": "Informal_logic", "label": "Informal_logic", "shape": "dot", "size": 10}, {"id": "Formal_language", "label": "Formal_language", "shape": "dot", "size": 10}, {"id": "Natural_language", "label": "Natural_language", "shape": "dot", "size": 10}, {"id": "Ampliative", "label": "Ampliative", "shape": "dot", "size": 10}, {"id": "Formal_fallacy", "label": "Formal_fallacy", "shape": "dot", "size": 10}, {"id": "Informal_fallacies", "label": "Informal_fallacies", "shape": "dot", "size": 10}, {"id": "Consciousness", "label": "Consciousness", "shape": "dot", "size": 10}, {"id": "Logical_consequence", "label": "Logical_consequence", "shape": "dot", "size": 10}, {"id": "Information", "label": "Information", "shape": "dot", "size": 10}, {"id": "Mathematics", "label": "Mathematics", "shape": "dot", "size": 10}, {"id": "Art", "label": "Art", "shape": "dot", "size": 10}, {"id": "Humans", "label": "Humans", "shape": "dot", "size": 10}, {"id": "Rationality", "label": "Rationality", "shape": "dot", "size": 10}, {"id": "Sentience", "label": "Sentience", "shape": "dot", "size": 10}, {"id": "Awareness", "label": "Awareness", "shape": "dot", "size": 10}, {"id": "Mind", "label": "Mind", "shape": "dot", "size": 10}, {"id": "Introspection", "label": "Introspection", "shape": "dot", "size": 10}, {"id": "Thought", "label": "Thought", "shape": "dot", "size": 10}, {"id": "Imagination", "label": "Imagination", "shape": "dot", "size": 10}, {"id": "Volition_(psychology)", "label": "Volition_(psychology)", "shape": "dot", "size": 10}, {"id": "Experience", "label": "Experience", "shape": "dot", "size": 10}, {"id": "Feeling", "label": "Feeling", "shape": "dot", "size": 10}, {"id": "Meta-cognition", "label": "Meta-cognition", "shape": "dot", "size": 10}, {"id": "Self-awareness", "label": "Self-awareness", "shape": "dot", "size": 10}, {"id": "Higher-order_theories_of_consciousness", "label": "Higher-order_theories_of_consciousness", "shape": "dot", "size": 10}]);
+        edges = new vis.DataSet([{"arrows": "to", "from": "Kolkata", "label": 1, "to": "List_of_renamed_Indian_cities_and_states", "weight": 1}, {"arrows": "to", "from": "Kolkata", "label": 1, "to": "Capital_city", "weight": 1}, {"arrows": "to", "from": "Kolkata", "label": 1, "to": "India", "weight": 1}, {"arrows": "to", "from": "Kolkata", "label": 1, "to": "States_and_union_territories_of_India", "weight": 1}, {"arrows": "to", "from": "Kolkata", "label": 1, "to": "West_Bengal", "weight": 1}, {"arrows": "to", "from": "Kolkata", "label": 1, "to": "Hooghly_River", "weight": 1}, {"arrows": "to", "from": "Kolkata", "label": 1, "to": "Bangladesh", "weight": 1}, {"arrows": "to", "from": "Kolkata", "label": 1, "to": "East_India", "weight": 1}, {"arrows": "to", "from": "Kolkata", "label": 1, "to": "North-East_India", "weight": 1}, {"arrows": "to", "from": "Kolkata", "label": 1, "to": "List_of_most_populous_cities_in_India", "weight": 1}, {"arrows": "to", "from": "Kolkata", "label": 1, "to": "Lakh", "weight": 1}, {"arrows": "to", "from": "Kolkata", "label": 1, "to": "Crore", "weight": 1}, {"arrows": "to", "from": "Kolkata", "label": 1, "to": "Kolkata_metropolitan_area", "weight": 1}, {"arrows": "to", "from": "Kolkata", "label": 1, "to": "List_of_metropolitan_areas_in_India", "weight": 1}, {"arrows": "to", "from": "Kolkata", "label": 1, "to": "Port_of_Kolkata", "weight": 1}, {"arrows": "to", "from": "List_of_renamed_Indian_cities_and_states", "label": 1, "to": "British_Raj", "weight": 1}, {"arrows": "to", "from": "List_of_renamed_Indian_cities_and_states", "label": 1, "to": "United_Kingdom", "weight": 1}, {"arrows": "to", "from": "List_of_renamed_Indian_cities_and_states", "label": 1, "to": "India", "weight": 1}, {"arrows": "to", "from": "List_of_renamed_Indian_cities_and_states", "label": 1, "to": "Endonym_and_exonym", "weight": 1}, {"arrows": "to", "from": "British_Raj", "label": 1, "to": "Hindi_language", "weight": 1}, {"arrows": "to", "from": "British_Raj", "label": 1, "to": "The_Crown", "weight": 1}, {"arrows": "to", "from": "British_Raj", "label": 1, "to": "Indian_subcontinent", "weight": 1}, {"arrows": "to", "from": "British_Raj", "label": 1, "to": "United_Kingdom_of_Great_Britain_and_Ireland", "weight": 1}, {"arrows": "to", "from": "British_Raj", "label": 1, "to": "Presidencies_and_provinces_of_British_India", "weight": 1}, {"arrows": "to", "from": "British_Raj", "label": 1, "to": "British_paramountcy", "weight": 1}, {"arrows": "to", "from": "British_Raj", "label": 1, "to": "Princely_state", "weight": 1}, {"arrows": "to", "from": "Hindi_language", "label": 1, "to": "Devanagari", "weight": 1}, {"arrows": "to", "from": "Hindi_language", "label": 1, "to": "ISO_15919", "weight": 1}, {"arrows": "to", "from": "Hindi_language", "label": 1, "to": "Indo-Aryan_language", "weight": 1}, {"arrows": "to", "from": "Hindi_language", "label": 1, "to": "Hindi_Belt", "weight": 1}, {"arrows": "to", "from": "Hindi_language", "label": 1, "to": "North_India", "weight": 1}, {"arrows": "to", "from": "Hindi_language", "label": 1, "to": "Central_India", "weight": 1}, {"arrows": "to", "from": "Hindi_language", "label": 1, "to": "East_India", "weight": 1}, {"arrows": "to", "from": "Hindi_language", "label": 1, "to": "Western_India", "weight": 1}, {"arrows": "to", "from": "Hindi_language", "label": 1, "to": "Standard_language", "weight": 1}, {"arrows": "to", "from": "Hindi_language", "label": 1, "to": "Sanskrit", "weight": 1}, {"arrows": "to", "from": "Hindi_language", "label": 1, "to": "Register_(sociolinguistics)", "weight": 1}, {"arrows": "to", "from": "Hindi_language", "label": 1, "to": "Hindustani_language", "weight": 1}, {"arrows": "to", "from": "Hindi_language", "label": 1, "to": "Old_Hindi", "weight": 1}, {"arrows": "to", "from": "Hindi_language", "label": 1, "to": "Delhi", "weight": 1}, {"arrows": "to", "from": "Hindi_language", "label": 1, "to": "Northern_India", "weight": 1}, {"arrows": "to", "from": "Hindi_language", "label": 1, "to": "Official_language", "weight": 1}, {"arrows": "to", "from": "Hindi_language", "label": 1, "to": "Government_of_India", "weight": 1}, {"arrows": "to", "from": "Hindi_language", "label": 1, "to": "Indian_English", "weight": 1}, {"arrows": "to", "from": "Hindi_language", "label": 1, "to": "Languages_with_official_status_in_India", "weight": 1}, {"arrows": "to", "from": "Hindi_language", "label": 1, "to": "States_of_India", "weight": 1}, {"arrows": "to", "from": "Hindi_language", "label": 1, "to": "Union_Territories", "weight": 1}, {"arrows": "to", "from": "Hindi_language", "label": 1, "to": "Scheduled_languages_of_India", "weight": 1}, {"arrows": "to", "from": "Devanagari", "label": 1, "to": "IAST", "weight": 1}, {"arrows": "to", "from": "Devanagari", "label": 1, "to": "Sanskrit_language", "weight": 1}, {"arrows": "to", "from": "Devanagari", "label": 1, "to": "Abugida", "weight": 1}, {"arrows": "to", "from": "Devanagari", "label": 1, "to": "Brahmi_script", "weight": 1}, {"arrows": "to", "from": "Devanagari", "label": 1, "to": "Indian_subcontinent", "weight": 1}, {"arrows": "to", "from": "Devanagari", "label": 1, "to": "List_of_writing_systems_by_adoption", "weight": 1}, {"arrows": "to", "from": "IAST", "label": 1, "to": "Romanisation", "weight": 1}, {"arrows": "to", "from": "IAST", "label": 1, "to": "Brahmic_family", "weight": 1}, {"arrows": "to", "from": "IAST", "label": 1, "to": "Sanskrit", "weight": 1}, {"arrows": "to", "from": "IAST", "label": 1, "to": "Sir_Charles_Trevelyan,_1st_Baronet", "weight": 1}, {"arrows": "to", "from": "IAST", "label": 1, "to": "William_Jones_(philologist)", "weight": 1}, {"arrows": "to", "from": "IAST", "label": 1, "to": "Monier_Monier-Williams", "weight": 1}, {"arrows": "to", "from": "IAST", "label": 1, "to": "International_Congress_of_Orientalists", "weight": 1}, {"arrows": "to", "from": "Romanisation", "label": 1, "to": "Linguistics", "weight": 1}, {"arrows": "to", "from": "Romanisation", "label": 1, "to": "Writing_system", "weight": 1}, {"arrows": "to", "from": "Romanisation", "label": 1, "to": "Latin_script", "weight": 1}, {"arrows": "to", "from": "Romanisation", "label": 1, "to": "Transliteration", "weight": 1}, {"arrows": "to", "from": "Romanisation", "label": 1, "to": "Transcription_(linguistics)", "weight": 1}, {"arrows": "to", "from": "Romanisation", "label": 1, "to": "Phoneme", "weight": 1}, {"arrows": "to", "from": "Romanisation", "label": 1, "to": "Semantic", "weight": 1}, {"arrows": "to", "from": "Linguistics", "label": 1, "to": "Science", "weight": 1}, {"arrows": "to", "from": "Linguistics", "label": 1, "to": "Scientific_study", "weight": 1}, {"arrows": "to", "from": "Linguistics", "label": 1, "to": "Human", "weight": 1}, {"arrows": "to", "from": "Linguistics", "label": 1, "to": "Language", "weight": 1}, {"arrows": "to", "from": "Linguistics", "label": 1, "to": "Cognition", "weight": 1}, {"arrows": "to", "from": "Linguistics", "label": 1, "to": "Scientific_field", "weight": 1}, {"arrows": "to", "from": "Linguistics", "label": 1, "to": "Academic_discipline", "weight": 1}, {"arrows": "to", "from": "Linguistics", "label": 1, "to": "Social_science", "weight": 1}, {"arrows": "to", "from": "Linguistics", "label": 1, "to": "Natural_science", "weight": 1}, {"arrows": "to", "from": "Linguistics", "label": 1, "to": "Cognitive_science", "weight": 1}, {"arrows": "to", "from": "Linguistics", "label": 1, "to": "Humanities", "weight": 1}, {"arrows": "to", "from": "Science", "label": 1, "to": "Scientific_method", "weight": 1}, {"arrows": "to", "from": "Science", "label": 1, "to": "Knowledge", "weight": 1}, {"arrows": "to", "from": "Science", "label": 1, "to": "Testability", "weight": 1}, {"arrows": "to", "from": "Science", "label": 1, "to": "Explanation", "weight": 1}, {"arrows": "to", "from": "Science", "label": 1, "to": "Prediction", "weight": 1}, {"arrows": "to", "from": "Science", "label": 1, "to": "Universe", "weight": 1}, {"arrows": "to", "from": "Scientific_method", "label": 1, "to": "Empirical_evidence", "weight": 1}, {"arrows": "to", "from": "Scientific_method", "label": 1, "to": "Knowledge", "weight": 1}, {"arrows": "to", "from": "Scientific_method", "label": 1, "to": "Science", "weight": 1}, {"arrows": "to", "from": "Scientific_method", "label": 1, "to": "Observation", "weight": 1}, {"arrows": "to", "from": "Scientific_method", "label": 1, "to": "Skepticism", "weight": 1}, {"arrows": "to", "from": "Scientific_method", "label": 1, "to": "Philosophy_of_science", "weight": 1}, {"arrows": "to", "from": "Scientific_method", "label": 1, "to": "Perception", "weight": 1}, {"arrows": "to", "from": "Scientific_method", "label": 1, "to": "Hypothesis", "weight": 1}, {"arrows": "to", "from": "Scientific_method", "label": 1, "to": "Inductive_reasoning", "weight": 1}, {"arrows": "to", "from": "Scientific_method", "label": 1, "to": "Experiment", "weight": 1}, {"arrows": "to", "from": "Scientific_method", "label": 1, "to": "Deductive_reasoning", "weight": 1}, {"arrows": "to", "from": "Empirical_evidence", "label": 1, "to": "Proposition", "weight": 1}, {"arrows": "to", "from": "Empirical_evidence", "label": 1, "to": "Evidence", "weight": 1}, {"arrows": "to", "from": "Empirical_evidence", "label": 1, "to": "Sense", "weight": 1}, {"arrows": "to", "from": "Empirical_evidence", "label": 1, "to": "Experiment", "weight": 1}, {"arrows": "to", "from": "Empirical_evidence", "label": 1, "to": "Science", "weight": 1}, {"arrows": "to", "from": "Empirical_evidence", "label": 1, "to": "Epistemology", "weight": 1}, {"arrows": "to", "from": "Empirical_evidence", "label": 1, "to": "Law", "weight": 1}, {"arrows": "to", "from": "Proposition", "label": 1, "to": "Logic", "weight": 1}, {"arrows": "to", "from": "Proposition", "label": 1, "to": "Linguistics", "weight": 1}, {"arrows": "to", "from": "Proposition", "label": 1, "to": "Sentence_(linguistics)", "weight": 1}, {"arrows": "to", "from": "Proposition", "label": 1, "to": "Philosophy", "weight": 1}, {"arrows": "to", "from": "Proposition", "label": 1, "to": "Meaning_(philosophy)", "weight": 1}, {"arrows": "to", "from": "Proposition", "label": 1, "to": "Truth-bearer", "weight": 1}, {"arrows": "to", "from": "Proposition", "label": 1, "to": "Truth", "weight": 1}, {"arrows": "to", "from": "Proposition", "label": 1, "to": "False_(logic)", "weight": 1}, {"arrows": "to", "from": "Logic", "label": 1, "to": "Reason", "weight": 1}, {"arrows": "to", "from": "Logic", "label": 1, "to": "Argument", "weight": 1}, {"arrows": "to", "from": "Logic", "label": 1, "to": "Deductive_reasoning", "weight": 1}, {"arrows": "to", "from": "Logic", "label": 1, "to": "Validity_(logic)", "weight": 1}, {"arrows": "to", "from": "Logic", "label": 1, "to": "Inference", "weight": 1}, {"arrows": "to", "from": "Logic", "label": 1, "to": "Logical_truth", "weight": 1}, {"arrows": "to", "from": "Logic", "label": 1, "to": "Formal_science", "weight": 1}, {"arrows": "to", "from": "Logic", "label": 1, "to": "Premise", "weight": 1}, {"arrows": "to", "from": "Logic", "label": 1, "to": "Proposition", "weight": 1}, {"arrows": "to", "from": "Logic", "label": 1, "to": "Logical_constant", "weight": 1}, {"arrows": "to", "from": "Logic", "label": 1, "to": "Formal_system", "weight": 1}, {"arrows": "to", "from": "Logic", "label": 1, "to": "Informal_logic", "weight": 1}, {"arrows": "to", "from": "Logic", "label": 1, "to": "Formal_language", "weight": 1}, {"arrows": "to", "from": "Logic", "label": 1, "to": "Natural_language", "weight": 1}, {"arrows": "to", "from": "Logic", "label": 1, "to": "Ampliative", "weight": 1}, {"arrows": "to", "from": "Logic", "label": 1, "to": "Formal_fallacy", "weight": 1}, {"arrows": "to", "from": "Logic", "label": 1, "to": "Informal_fallacies", "weight": 1}, {"arrows": "to", "from": "Reason", "label": 1, "to": "Consciousness", "weight": 1}, {"arrows": "to", "from": "Reason", "label": 1, "to": "Logic", "weight": 1}, {"arrows": "to", "from": "Reason", "label": 1, "to": "Logical_consequence", "weight": 1}, {"arrows": "to", "from": "Reason", "label": 1, "to": "Information", "weight": 1}, {"arrows": "to", "from": "Reason", "label": 1, "to": "Truth", "weight": 1}, {"arrows": "to", "from": "Reason", "label": 1, "to": "Human", "weight": 1}, {"arrows": "to", "from": "Reason", "label": 1, "to": "Philosophy", "weight": 1}, {"arrows": "to", "from": "Reason", "label": 1, "to": "Science", "weight": 1}, {"arrows": "to", "from": "Reason", "label": 1, "to": "Language", "weight": 1}, {"arrows": "to", "from": "Reason", "label": 1, "to": "Mathematics", "weight": 1}, {"arrows": "to", "from": "Reason", "label": 1, "to": "Art", "weight": 1}, {"arrows": "to", "from": "Reason", "label": 1, "to": "Humans", "weight": 1}, {"arrows": "to", "from": "Reason", "label": 1, "to": "Rationality", "weight": 1}, {"arrows": "to", "from": "Consciousness", "label": 1, "to": "Sentience", "weight": 1}, {"arrows": "to", "from": "Consciousness", "label": 1, "to": "Awareness", "weight": 1}, {"arrows": "to", "from": "Consciousness", "label": 1, "to": "Mind", "weight": 1}, {"arrows": "to", "from": "Consciousness", "label": 1, "to": "Introspection", "weight": 1}, {"arrows": "to", "from": "Consciousness", "label": 1, "to": "Thought", "weight": 1}, {"arrows": "to", "from": "Consciousness", "label": 1, "to": "Imagination", "weight": 1}, {"arrows": "to", "from": "Consciousness", "label": 1, "to": "Volition_(psychology)", "weight": 1}, {"arrows": "to", "from": "Consciousness", "label": 1, "to": "Cognition", "weight": 1}, {"arrows": "to", "from": "Consciousness", "label": 1, "to": "Experience", "weight": 1}, {"arrows": "to", "from": "Consciousness", "label": 1, "to": "Feeling", "weight": 1}, {"arrows": "to", "from": "Consciousness", "label": 1, "to": "Perception", "weight": 1}, {"arrows": "to", "from": "Consciousness", "label": 1, "to": "Meta-cognition", "weight": 1}, {"arrows": "to", "from": "Consciousness", "label": 1, "to": "Self-awareness", "weight": 1}, {"arrows": "to", "from": "Consciousness", "label": 1, "to": "Higher-order_theories_of_consciousness", "weight": 1}]);
+
+        // adding nodes and edges to the graph
+        data = {nodes: nodes, edges: edges};
+
+        var options = {
+    "configure": {
+        "enabled": true
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+        
+        
+
+        
+        // if this network requires displaying the configure window,
+        // put it in its div
+        options.configure["container"] = document.getElementById("config");
+        
+
+        network = new vis.Network(container, data, options);
+	 
+        
+
+
+        
+        network.on("stabilizationProgress", function(params) {
+      		document.getElementById('loadingBar').removeAttribute("style");
+	        var maxWidth = 496;
+	        var minWidth = 20;
+	        var widthFactor = params.iterations/params.total;
+	        var width = Math.max(minWidth,maxWidth * widthFactor);
+
+	        document.getElementById('bar').style.width = width + 'px';
+	        document.getElementById('text').innerHTML = Math.round(widthFactor*100) + '%';
+	    });
+	    network.once("stabilizationIterationsDone", function() {
+	        document.getElementById('text').innerHTML = '100%';
+	        document.getElementById('bar').style.width = '496px';
+	        document.getElementById('loadingBar').style.opacity = 0;
+	        // really clean the dom element
+	        setTimeout(function () {document.getElementById('loadingBar').style.display = 'none';}, 500);
+	    });
+        
+
+        return network;
+
+    }
+
+    drawGraph();
+
+</script>
+</body>
+</html>
